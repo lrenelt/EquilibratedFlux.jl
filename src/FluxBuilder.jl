@@ -93,6 +93,15 @@ function setup_patch_system!(A, RHS, linalg, dm_RT, dm_L²)
     transpose(@view linalg.B[free_patch_dofs_RT, free_patch_dofs_L²])
 end
 
+function patch_hat_Ah2_contribution(patch_data, cell_Ah2_diags)
+  s = 0.0
+  node_to_offsets = patch_data.node_to_offsets
+  for (i, cellid) in enumerate(patch_data.patch_cell_ids)
+    s += cell_Ah2_diags[cellid, node_to_offsets[i]]
+  end
+  s
+end
+
 function count_free_dofs(dm::DOFManager)
   free_patch_dofs = dm.free_patch_dofs_loc
   length(free_patch_dofs)
